@@ -23,8 +23,12 @@ before(done => {
 
 // invoked before each test to clean up
 beforeEach(done => {
-  mongoose.connection.collections.users.drop(() => {
-    // Ready to run next test
-    done();
+  const { users, comments, blogposts } = mongoose.connection.collections;
+  users.drop(() => {
+    comments.drop(() => {
+      blogposts.drop(() => {
+        done();
+      });
+    });
   });
 });

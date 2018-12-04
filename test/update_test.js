@@ -5,7 +5,7 @@ describe("Updating records", () => {
   let rob;
 
   beforeEach(done => {
-    rob = new User({ name: "Rob" });
+    rob = new User({ name: "Rob", likes: 0 });
     rob.save().then(() => done());
   });
 
@@ -39,5 +39,14 @@ describe("Updating records", () => {
 
   it("A model class can find a record with an Id and update", done => {
     assertName(User.findOneAndUpdate({ _id: rob._id }, { name: "Alex" }), done);
+  });
+
+  it("A user can have their likes incremented by 1", done => {
+    User.updateMany({ name: "Rob" }, { $inc: { likes: 1 } })
+      .then(() => User.findOne({ name: "Rob" }))
+      .then(user => {
+        assert(user.likes === 1);
+        done();
+      });
   });
 });
